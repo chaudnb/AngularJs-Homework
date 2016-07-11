@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title></title>
+    <link href="css/bootstrap.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700" rel="stylesheet">
+    <link href="css/shop.css" rel="stylesheet" type="text/css">
+
+</head>
+<body ng-app="myApp" ng-controller="myController">
+<div id="myheader"></div>
+<div class="container">
+    <ol class="breadcrumb">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="#">Products</a></li>
+        <li class="active">Cart</li>
+    </ol>
+    <h2><span class="glyphicon glyphicon-shopping-cart"></span> SHOPPING CART</h2>
+
+    <div class="row">
+        <div class="col-md-9">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>PRODUCT</th>
+                            <th>DETAILS</th>
+                            <th></th>
+                            <th>QNT</th>
+                            <th>DISCOUNT</th>
+                            <th>TOTAL</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><img ng-src="{{ product.imageUrl }}" class="img img-responsive img-cart"/></td>
+                            <td>
+                                {{ product.name }}
+                                <br>
+                                <b>$ {{ product.price }}</b>
+                            </td>
+                            <td><span class="glyphicon glyphicon-trash"></span></td>
+                            <td><input type="number" ng-model="quantity" min="0"></td>
+                            <td><b>$ {{ product.price - product.discount }}</b></td>
+                            <td><strong>$ {{quantity * product.discount}}</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <a class="btn btn-default"><span class="glyphicon glyphicon-arrow-left"></span> Continue shopping</a>
+                <a class="btn btn-default pull-right"><span class="glyphicon glyphicon-refresh"></span> Update cart</a>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <a class="btn btn-lg btn-block btn-success">Proceed to checkout <span class="glyphicon glyphicon-arrow-right"></span></a>
+            <br/>
+            <table class="table table-bordered">
+                <tr>
+                    <td>Total Products</td>
+                    <td><strong>$ {{quantity * product.discount}}</strong></td>
+                </tr>
+                <tr>
+                    <td>Shipping</td>
+                    <td>Free</td>
+                </tr>
+                <tr>
+                    <td>Total (tax excl.)</td>
+                    <td><strong>$ {{quantity * product.discount}}</strong></td>
+                </tr>
+                <tr>
+                    <td>Total tax</td>
+                    <td>$ 0</td>
+                </tr>
+                <tr>
+                    <td>Total</td>
+                    <td style="color:#4ec67f;font-size: 20px"><strong>$ {{quantity * product.discount}}</strong></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+<script src="shop.js"></script>
+<script src="data.js"></script>
+<script src="js/jquery-2.2.3.min.js"></script>
+<script src="js/angular.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script>
+
+
+    var app = angular.module("myApp", []);
+
+    app.controller("myController", function ($scope) {
+        var id = getParameterByName("id");
+        products.forEach(function (item, index) {
+            if (id == item.id) {
+                $scope.product = item;
+                return false;
+            }
+        });
+    })
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        $("#myheader").load("templates/navigationbar.html");
+    });
+</script>
+</body>
+</html>

@@ -11,7 +11,7 @@
 
 </head>
 <body ng-app="myApp" ng-controller="myController">
-<div id="myheader"></div>
+<div ng-include="'templates/navigationbar.html'"></div>
 <div class="container">
     <ol class="breadcrumb">
         <li><a href="index.html">Home</a></li>
@@ -38,6 +38,7 @@
                             {{ product.name }}
                         </a>
                     </h4>
+
                     <div class="price">
                         <span class="pd-discount">$ {{ product.discount }}</span>
                         <span class="pd-price"> $ {{ product.price }}</span>
@@ -54,29 +55,33 @@
                         </li>
                     </ul>
                     <hr/>
+                    <form>
                     <div class="row">
-                    <div class="col-md-6">
-                        <form class="form-group form-horizontal">
-                            <input type="number" placeholder="Quantity" min="0">
-                        </form>
+                        <div class="col-md-6 form-group">
+                            <input type="number" placeholder="Quantity" min="0" class="form-control">
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <select ng-options="item as item.size for item in product.sizes track by item.id"
+                                    ng-model="selectedSize"  class="form-control">
+                                <option value="">Size</option>
+                            </select>
+                        </div>
                     </div>
-                    <div class="col-md-6">
-                        <span><strong>SIZE : </strong></span>
-
-                        <select ng-options="item as item.size for item in product.sizes track by item.id" ng-model="selectedSize"></select>
-                    </div>
-                    </div>
+                    </form>
                 </div>
                 <hr/>
                 <div class="action-control">
-                    <a class="btn btn-success btn-lg"  href="addtocart.html?id={{ product.id }}"> <span class="add2cart">
+                    <a class="btn btn-success btn-lg" ng-if="product.stock <= 0" disabled> <span class="add2cart">
+                    ADD TO CART </span> </a>
+                    <a class="btn btn-success btn-lg" ng-if="product.stock > 0"
+                       href="addtocart.html?id={{ product.id }}"> <span class="add2cart">
                     ADD TO CART </span> </a>
                     <a class="btn btn-default btn-lg"> <span class="add2cart">
                     ADD TO WISHLIST </span> </a>
                 </div>
                 <div>
                     <span ng-if="product.stock > 0" class="glyphicon glyphicon-ok-sign" style="color:#4ec67f"></span>
-                    <span ng-if="product.stock <= 0" class="glyphicon glyphicon-ok-sign"></span> IN STOCK &nbsp;&nbsp;
+                    <span ng-if="product.stock <= 0" class="glyphicon glyphicon-remove-sign"></span> IN STOCK &nbsp;&nbsp;
                     <span class="glyphicon glyphicon-lock"></span> SECURE ONLINE ORDERING
                 </div>
                 <hr/>
@@ -84,9 +89,12 @@
 
                     <!-- Nav tabs -->
                     <ul class="nav nav-tabs" role="tablist">
-                        <li role="presentation" class="active"><a href="#1" aria-controls="home" role="tab" data-toggle="tab">DETAILS</a></li>
-                        <li role="presentation"><a href="#2" aria-controls="profile" role="tab" data-toggle="tab">SIZE</a></li>
-                        <li role="presentation"><a href="#3" aria-controls="messages" role="tab" data-toggle="tab">SHIPPING</a></li>
+                        <li role="presentation" class="active"><a href="#1" aria-controls="home" role="tab"
+                                                                  data-toggle="tab">DETAILS</a></li>
+                        <li role="presentation"><a href="#2" aria-controls="profile" role="tab"
+                                                   data-toggle="tab">SIZE</a></li>
+                        <li role="presentation"><a href="#3" aria-controls="messages" role="tab" data-toggle="tab">SHIPPING</a>
+                        </li>
 
                     </ul>
 

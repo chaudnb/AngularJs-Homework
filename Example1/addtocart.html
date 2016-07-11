@@ -25,13 +25,14 @@
             <div class="table-responsive">
                 <table class="table">
                     <thead>
-                        <tr>
+                        <tr style="background: #EBEDEF;">
                             <th>PRODUCT</th>
                             <th>DETAILS</th>
                             <th></th>
                             <th>QNT</th>
                             <th>DISCOUNT</th>
                             <th>TOTAL</th>
+                            <th>TOTAL 2</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -43,14 +44,24 @@
                                 <b>$ {{ product.price }}</b>
                             </td>
                             <td><span class="glyphicon glyphicon-trash"></span></td>
-                            <td><input type="number" ng-model="quantity" min="0"></td>
+                            <td><input type="number" ng-model="quantity" min="0" ng-click="myFunc()"></td>
                             <td><b>$ {{ product.price - product.discount }}</b></td>
                             <td><strong>$ {{quantity * product.discount}}</strong></td>
+                            <td></td>
                         </tr>
+
                     </tbody>
+                    </tbody>
+                    <tfoot>
+                        <tr style="background: #EBEDEF;">
+                            <td colspan="7">
+                                <a class="btn btn-default"><span class="glyphicon glyphicon-arrow-left"></span> Continue shopping</a>
+                                <a class="btn btn-default pull-right"><span class="glyphicon glyphicon-refresh"></span> Update cart</a>
+                            </td>
+                        </tr>
+                    </tfoot>
                 </table>
-                <a class="btn btn-default"><span class="glyphicon glyphicon-arrow-left"></span> Continue shopping</a>
-                <a class="btn btn-default pull-right"><span class="glyphicon glyphicon-refresh"></span> Update cart</a>
+
             </div>
         </div>
         <div class="col-md-3">
@@ -59,7 +70,7 @@
             <table class="table table-bordered">
                 <tr>
                     <td>Total Products</td>
-                    <td><strong>$ {{quantity * product.discount}}</strong></td>
+                    <td><strong>$ {{total}}</strong></td>
                 </tr>
                 <tr>
                     <td>Shipping</td>
@@ -81,6 +92,7 @@
         </div>
     </div>
 </div>
+<div ng-include="'templates/footer.html'"></div>
 <script src="shop.js"></script>
 <script src="data.js"></script>
 <script src="js/jquery-2.2.3.min.js"></script>
@@ -99,13 +111,14 @@
                 return false;
             }
         });
+        $scope.quantity= 0;
+        $scope.quantity2= 0;
+        $scope.total = 0;
+        $scope.myFunc = function(){
+            $scope.total = $scope.quantity * $scope.product.discount;
+        }
     })
 </script>
 
-<script type="text/javascript">
-    $(document).ready(function(){
-        $("#myheader").load("templates/navigationbar.html");
-    });
-</script>
 </body>
 </html>

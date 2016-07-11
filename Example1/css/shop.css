@@ -146,3 +146,16 @@ a {
 .nav-tabs>li.active>a, .nav-tabs>li.active>a:hover, .nav-tabs>li.active>a:focus, .nav-tabs>li:hover>a {
     background: #BFC9CA;
 }
+.breadcrumb{
+    background-color: transparent;
+    border: solid 1px #ddd;
+}
+.footer {
+    background: #f2f2f2;
+    height: auto;
+    padding-bottom: 30px;
+    position: relative;
+    width: 100%;
+    border-bottom: 1px solid #ddd;
+    border-top: 1px solid #DDDDDD;
+}

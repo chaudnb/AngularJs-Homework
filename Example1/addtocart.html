@@ -49,7 +49,19 @@
                             <td><strong>$ {{quantity * product.discount}}</strong></td>
                             <td></td>
                         </tr>
-
+                        <tr>
+                            <td><img ng-src="{{ product.imageUrl }}" class="img img-responsive img-cart"/></td>
+                            <td>
+                                {{ product.name }}
+                                <br>
+                                <b>$ {{ product.price }}</b>
+                            </td>
+                            <td><span class="glyphicon glyphicon-trash"></span></td>
+                            <td><input type="number" ng-model="quantity2" min="0" ng-click="myFunc2()"></td>
+                            <td><b>$ {{ product.price - product.discount }}</b></td>
+                            <td><strong>$ {{quantity2 * product.discount}}</strong></td>
+                            <td></td>
+                        </tr>
                     </tbody>
                     </tbody>
                     <tfoot>
@@ -70,7 +82,7 @@
             <table class="table table-bordered">
                 <tr>
                     <td>Total Products</td>
-                    <td><strong>$ {{total}}</strong></td>
+                    <td><strong>$ {{total +total2}}</strong></td>
                 </tr>
                 <tr>
                     <td>Shipping</td>
@@ -116,6 +128,10 @@
         $scope.total = 0;
         $scope.myFunc = function(){
             $scope.total = $scope.quantity * $scope.product.discount;
+        }
+        $scope.total2 = 0;
+        $scope.myFunc = function(){
+            $scope.total2 = $scope.quantity2 * $scope.product.discount;
         }
     })
 </script>

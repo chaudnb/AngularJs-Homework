@@ -1,18 +1,3 @@
-<!DOCTYPE html>
-<html>
-<head lang="en">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title></title>
-    <link href="css/bootstrap.css" rel="stylesheet" type="text/css">
-    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700" rel="stylesheet">
-    <link href="css/shop.css" rel="stylesheet" type="text/css">
-
-</head>
-<body ng-app="myApp" ng-controller="myController">
-<div ng-include="'templates/navigationbar.html'"></div>
-<div class="container">
     <ol class="breadcrumb">
         <li><a href="index.html">Home</a></li>
         <li><a href="#">Products</a></li>
@@ -26,44 +11,40 @@
                 <table class="table">
                     <thead>
                         <tr style="background: #EBEDEF;">
+                            <th>ID</th>
                             <th>PRODUCT</th>
-                            <th>DETAILS</th>
-                            <th></th>
+                            <th>PRICE</th>
                             <th>QNT</th>
-                            <th>DISCOUNT</th>
                             <th>TOTAL</th>
-                            <th>TOTAL 2</th>
+                            <th>REMOVE</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td><img ng-src="{{ product.imageUrl }}" class="img img-responsive img-cart"/></td>
-                            <td>
-                                {{ product.name }}
-                                <br>
-                                <b>$ {{ product.price }}</b>
-                            </td>
-                            <td><span class="glyphicon glyphicon-trash"></span></td>
-                            <td><input type="number" ng-model="quantity" min="0" ng-click="myFunc()"></td>
-                            <td><b>$ {{ product.price - product.discount }}</b></td>
-                            <td><strong>$ {{quantity * product.discount}}</strong></td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td><img ng-src="{{ product.imageUrl }}" class="img img-responsive img-cart"/></td>
-                            <td>
-                                {{ product.name }}
-                                <br>
-                                <b>$ {{ product.price }}</b>
-                            </td>
-                            <td><span class="glyphicon glyphicon-trash"></span></td>
-                            <td><input type="number" ng-model="quantity2" min="0" ng-click="myFunc2()"></td>
-                            <td><b>$ {{ product.price - product.discount }}</b></td>
-                            <td><strong>$ {{quantity2 * product.discount}}</strong></td>
-                            <td></td>
-                        </tr>
+                    <tr ng-repeat="p in selectedItems">
+                        <td>{{ p.id }}</td>
+                        <td>{{ p.name }}</td>
+                        <td class="text-right">
+                            ${{ p.price }}</td>
+                        <td>
+                            <input class="form-control" type="number" min="1" max="999" value="1" ng-model="p.quantity"/>
+                        </td>
+                        <td class="text-right">
+                            ${{ p.price * p.quantity }}</td>
+                        <td>
+                            <button ng-click="remove(p)" class="btn btn-sm btn-danger">
+                                <span class="glyphicon glyphicon-trash"></span>
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-right" style="font-weight: bold" colspan="4">Total:</td>
+                        <td>
+                            ${{ getTotal() }}
+                        </td>
+                        <td></td>
+                    </tr>
                     </tbody>
-                    </tbody>
+
                     <tfoot>
                         <tr style="background: #EBEDEF;">
                             <td colspan="7">
@@ -82,7 +63,7 @@
             <table class="table table-bordered">
                 <tr>
                     <td>Total Products</td>
-                    <td><strong>$ {{total +total2}}</strong></td>
+                    <td><strong>${{ getTotal() }}</strong></td>
                 </tr>
                 <tr>
                     <td>Shipping</td>
@@ -90,7 +71,7 @@
                 </tr>
                 <tr>
                     <td>Total (tax excl.)</td>
-                    <td><strong>$ {{quantity * product.discount}}</strong></td>
+                    <td><strong>${{ getTotal() }}</strong></td>
                 </tr>
                 <tr>
                     <td>Total tax</td>
@@ -98,43 +79,8 @@
                 </tr>
                 <tr>
                     <td>Total</td>
-                    <td style="color:#4ec67f;font-size: 20px"><strong>$ {{quantity * product.discount}}</strong></td>
+                    <td style="color:#4ec67f;font-size: 20px"><strong>${{ getTotal() }}</strong></td>
                 </tr>
             </table>
         </div>
     </div>
-</div>
-<div ng-include="'templates/footer.html'"></div>
-<script src="shop.js"></script>
-<script src="data.js"></script>
-<script src="js/jquery-2.2.3.min.js"></script>
-<script src="js/angular.min.js"></script>
-<script src="js/bootstrap.min.js"></script>
-<script>
-
-
-    var app = angular.module("myApp", []);
-
-    app.controller("myController", function ($scope) {
-        var id = getParameterByName("id");
-        products.forEach(function (item, index) {
-            if (id == item.id) {
-                $scope.product = item;
-                return false;
-            }
-        });
-        $scope.quantity= 0;
-        $scope.quantity2= 0;
-        $scope.total = 0;
-        $scope.myFunc = function(){
-            $scope.total = $scope.quantity * $scope.product.discount;
-        }
-        $scope.total2 = 0;
-        $scope.myFunc = function(){
-            $scope.total2 = $scope.quantity2 * $scope.product.discount;
-        }
-    })
-</script>
-
-</body>
-</html>

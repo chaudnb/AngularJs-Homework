@@ -1,26 +1,13 @@
-<!DOCTYPE html>
-<html>
-<head lang="en">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title></title>
-    <link href="css/bootstrap.css" rel="stylesheet" type="text/css">
-    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700" rel="stylesheet">
-    <link href="css/shop.css" rel="stylesheet" type="text/css">
 
-</head>
-<body ng-app="myApp" ng-controller="myController">
-<div ng-include="'templates/navigationbar.html'"></div>
-<div class="container">
     <ol class="breadcrumb">
-        <li><a href="index.html">Home</a></li>
-        <li><a href="#">Products</a></li>
+        <li><a ui-sref="home">Home</a></li>
+        <li><a>Products</a></li>
         <li class="active">{{ product.name }}</li>
     </ol>
     <div class="row">
 
-        <div class="col-md-6">
+        <div class="col-sm-6">
+            <div class="row">
             <div class="col-xs-9">
                 <img ng-src="{{ product.imageUrl }}" class="img img-responsive img-product"/>
             </div>
@@ -28,15 +15,14 @@
                 <div ng-repeat="image in product.moreImages">
                     <img ng-src="{{ image.imageUrl }}" class="img img-responsive img-info"/>
                 </div>
-            </div>
+            </div></div>
+
         </div>
-        <div class="col-md-6">
+        <div class="col-sm-6">
             <div class="product-details">
                 <div class="description">
                     <h4 class="product-name">
-                        <a href="detail.html?id={{ product.id }}">
                             {{ product.name }}
-                        </a>
                     </h4>
 
                     <div class="price">
@@ -58,7 +44,7 @@
                     <form>
                     <div class="row">
                         <div class="col-md-6 form-group">
-                            <input type="number" placeholder="Quantity" min="0" class="form-control">
+                            <input type="number" placeholder="Quantity" min="0" max="{{product.stock}}" class="form-control">
                         </div>
                         <div class="col-md-6 form-group">
                             <select ng-options="item as item.size for item in product.sizes track by item.id"
@@ -74,14 +60,20 @@
                     <a class="btn btn-success btn-lg" ng-if="product.stock <= 0" disabled> <span class="add2cart">
                     ADD TO CART </span> </a>
                     <a class="btn btn-success btn-lg" ng-if="product.stock > 0"
-                       href="addtocart.html?id={{ product.id }}"> <span class="add2cart">
+                       ui-sref="cart"> <span class="add2cart">
                     ADD TO CART </span> </a>
                     <a class="btn btn-default btn-lg"> <span class="add2cart">
                     ADD TO WISHLIST </span> </a>
                 </div>
                 <div>
-                    <span ng-if="product.stock > 0" class="glyphicon glyphicon-ok-sign" style="color:#4ec67f"></span>
-                    <span ng-if="product.stock <= 0" class="glyphicon glyphicon-remove-sign"></span> IN STOCK &nbsp;&nbsp;
+                <div ng-if="product.stock > 0" style="display: inline">
+                    <span class="glyphicon glyphicon-ok-sign" style="color:#4ec67f"></span> IN STOCK &nbsp;&nbsp;
+                </div>
+                <div ng-if="product.stock <= 0" style="display: inline">
+                    <span class="glyphicon glyphicon-remove-sign"></span> OUT OF STOCK &nbsp;&nbsp;
+                </div>
+
+
                     <span class="glyphicon glyphicon-lock"></span> SECURE ONLINE ORDERING
                 </div>
                 <hr/>
@@ -89,20 +81,21 @@
 
                     <!-- Nav tabs -->
                     <ul class="nav nav-tabs" role="tablist">
-                        <li role="presentation" class="active"><a href="#1" aria-controls="home" role="tab"
-                                                                  data-toggle="tab">DETAILS</a></li>
-                        <li role="presentation"><a href="#2" aria-controls="profile" role="tab"
-                                                   data-toggle="tab">SIZE</a></li>
-                        <li role="presentation"><a href="#3" aria-controls="messages" role="tab" data-toggle="tab">SHIPPING</a>
+                        <li role="presentation" class="active">
+                            <a href="" aria-controls="detail" role="tab" data-toggle="tab" ng-click="changeTab(1)">DETAILS</a></li>
+                        <li role="presentation">
+                            <a href="" aria-controls="desc" role="tab" data-toggle="tab" ng-click="changeTab(2)">SIZE</a></li>
+                        <li role="presentation">
+                            <a href="" aria-controls="ship" role="tab" data-toggle="tab" ng-click="changeTab(3)">SHIPPING</a>
                         </li>
 
                     </ul>
 
                     <!-- Tab panes -->
                     <div class="tab-content">
-                        <div role="tabpanel" class="tab-pane active" id="1">{{ product.detail }}</div>
-                        <div role="tabpanel" class="tab-pane" id="2">{{ product.description }}</div>
-                        <div role="tabpanel" class="tab-pane" id="3">{{ product.shipping }}</div>
+                        <div role="tabpanel"  id="detail" ng-class="{'tab-pane active' : activeTab === 1, 'tab-pane' : activeTab !== 1}">{{ product.detail }}</div>
+                        <div role="tabpanel" id="desc" ng-class="{'tab-pane active' : activeTab === 2, 'tab-pane' : activeTab !== 2}">{{ product.description }}</div>
+                        <div role="tabpanel" id="ship" ng-class="{'tab-pane active' : activeTab === 3, 'tab-pane' : activeTab !== 3}">{{ product.shipping }}</div>
 
                     </div>
 
@@ -111,28 +104,3 @@
             </div>
         </div>
     </div>
-</div>
-<div ng-include="'templates/footer.html'"></div>
-<script src="shop.js"></script>
-<script src="data.js"></script>
-<script src="js/jquery-2.2.3.min.js"></script>
-<script src="js/angular.min.js"></script>
-<script src="js/bootstrap.min.js"></script>
-<script>
-
-
-    var app = angular.module("myApp", []);
-
-    app.controller("myController", function ($scope) {
-        var id = getParameterByName("id");
-        products.forEach(function (item, index) {
-            if (id == item.id) {
-                $scope.product = item;
-                return false;
-            }
-        });
-    })
-</script>
-
-</body>
-</html>

@@ -1,0 +1,23 @@
+<div>
+    <img ng-src="{{ pd.imageUrl }}" class="img img-responsive img-product"/>
+    <div class="description">
+        <h4 class="product-name">
+            <!--<a href="#/details/{{product.id }}">-->
+            <!--{{ product.name }}-->
+            <!--</a>-->
+            <a ui-sref="details({id : pd.id })">
+                {{ pd.name }}
+            </a>
+        </h4>
+        <p>
+            {{ pd.summary }}
+        </p>
+
+    </div>
+    <div class="price">
+        <span>$ {{ pd.price }}</span>
+    </div>
+    <div class="action-control"><a class="btn btn-success"  ng-click="myFunc()"> <span class="add2cart">
+                    <i class="glyphicon glyphicon-shopping-cart"> </i> Add to cart </span> </a>
+    </div>
+</div>

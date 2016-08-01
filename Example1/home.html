@@ -1,28 +1,8 @@
 
 <div class="row">
-    <div ng-repeat="product in listproducts" class="col-md-3">
+    <div ng-repeat="p in listproducts" class="col-md-3">
         <div class="product text-center">
-            <img ng-src="{{ product.imageUrl }}" class="img img-responsive img-product"/>
-            <div class="description">
-                <h4 class="product-name">
-                    <!--<a href="#/details/{{product.id }}">-->
-                        <!--{{ product.name }}-->
-                    <!--</a>-->
-                    <a ui-sref="details({id : product.id })">
-                        {{ product.name }}
-                    </a>
-                </h4>
-                <p>
-                    {{ product.summary }}
-                </p>
-
-            </div>
-            <div class="price">
-                <span>$ {{ product.price }}</span>
-            </div>
-            <div class="action-control"><a class="btn btn-success"  ng-click="myFunc()"> <span class="add2cart">
-                    <i class="glyphicon glyphicon-shopping-cart"> </i> Add to cart </span> </a>
-            </div>
+            <product pd="p"></product>
             <!--<ngcart-addtocart class="btn btn-primary" id="{{product.id}}" name="{{product.name}}" price="{{product.price}}" quantity="1" data="product">aaaaa</ngcart-addtocart>-->
         </div>
     </div>

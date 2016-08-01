@@ -1,5 +1,5 @@
 var app = angular.module('myApp', [
-    'ui.router','ngCart'
+    'ui.router','ngCart','app.directives.product'
 ]);
 
 function config($stateProvider, $urlRouterProvider) {

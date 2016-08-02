@@ -12,7 +12,7 @@
     <div class="row" style="margin-top: 20px">
         <div class="col-sm-9 col-xs-8">
             <img src="altp.jpg" class="img-responsive text-center">
-            <div ng-repeat="question in questions" ng-show="currentQues.id == question.id">
+            <div ng-repeat="question in questions"  ng-show="index+1 == question.id">
                 <div class="panel panel-primary">
                     <div class="panel-heading">
                         <h4>Câu hỏi {{index + 1}} : {{question.content}}</h4>
@@ -51,8 +51,8 @@
                 </div>
                 <div class="panel-body">
                     <div ng-repeat="q in questions">
-                        <div ng-if="currentQues.id == q.id" class="btn btn-block btn-danger" style="margin-bottom:5px">{{q.money}}</div>
-                        <div ng-if="currentQues.id != q.id" class="btn btn-block btn-info" style="margin-bottom:5px">{{q.money}}</div>
+                        <div ng-if="index + 1 == q.id" class="btn btn-block btn-danger" style="margin-bottom:5px">{{q.money}}</div>
+                        <div ng-if="index + 1 != q.id" class="btn btn-block btn-info" style="margin-bottom:5px">{{q.money}}</div>
                     </div>
                 </div>
             </div>
@@ -111,16 +111,12 @@
     var app = angular.module("myApp", ["firebase"]);
     app.controller("myController", function ($scope, $firebaseArray) {
         var ref = firebase.database().ref('quiz').limitToLast(100);
-        $scope.ques = $firebaseArray(ref);
-        var newJson = {};
-        newJson = $firebaseArray(ref);
-        var qus = [];
+        var newJson = $firebaseArray(ref);
 
         console.log(newJson);
         $scope.questions = newJson;
 
         $scope.index = 0;
-
 
         $scope.money = 0;
         $scope.end = false;
@@ -128,16 +124,15 @@
         $scope.pressBtn1 = false;
         $scope.pressBtn2 = false;
 
-        $scope.currentQues = $scope.questions.$getRecord($scope.index);
-        console.log($scope.currentQues);
 
         $scope.check = function(x){
             if(x == $scope.questions[$scope.index].correct){
                 playCorrectSound();
+                console.log($scope.index);
                 $scope.money = $scope.questions[$scope.index].money;
                 $scope.index++;
                 count++;
-                $scope.currentQues = $scope.questions[$scope.index];
+
                 if($scope.index == 10){
 
                     $scope.index = 9;
@@ -155,7 +150,7 @@
                 }else if($scope.index == 10){
                     $scope.money = 10000000;
                 }
-                $scope.currentQues = [];
+                $scope.questions[$scope.index] = [];
                 $scope.end = true;
                 $scope.pressBtn1 = true;
                 $scope.pressBtn2 = true;
@@ -163,28 +158,28 @@
         }
         $scope.endGame = function(){
             $scope.money = $scope.questions[$scope.index - 1].money;
-            $scope.currentQues = [];
+            $scope.questions = [];
             $scope.end = true;
             $scope.pressBtn2 = true;
         }
         $scope.helpGame = function(){
-            var y = $scope.currentQues.correct;
+            var y = $scope.questions[$scope.index].correct;
             switch (y){
                 case 1 :
-                    $scope.currentQues.option2 = 'X';
-                    $scope.currentQues.option3 = 'X';
+                    $scope.questions[$scope.index].option2 = 'X';
+                    $scope.questions[$scope.index].option3 = 'X';
                     break;
                 case 2 :
-                    $scope.currentQues.option1 = 'X';
-                    $scope.currentQues.option4 = 'X';
+                    $scope.questions[$scope.index].option1 = 'X';
+                    $scope.questions[$scope.index].option4 = 'X';
                     break;
                 case 3 :
-                    $scope.currentQues.option2 = 'X';
-                    $scope.currentQues.option4 = 'X';
+                    $scope.questions[$scope.index].option2 = 'X';
+                    $scope.questions[$scope.index].option4 = 'X';
                     break;
                 case 4 :
-                    $scope.currentQues.option1 = 'X';
-                    $scope.currentQues.option3 = 'X';
+                    $scope.questions[$scope.index].option1 = 'X';
+                    $scope.questions[$scope.index].option3 = 'X';
                     break;
                 default:
                     break;

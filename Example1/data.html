@@ -92,10 +92,10 @@
         </table>
     </div>
 </div>
-<script src="firebase.js"></script>
-<script src="../Example1/js/jquery-2.2.3.min.js"></script>
-<script src="../Example1/js/angular/angular.js"></script>
-<script src="angularfire.js"></script>
+<script src="./js/firebase.js"></script>
+<script src="./js/jquery-2.2.3.min.js"></script>
+<script src="./js/angular/angular.js"></script>
+<script src="./js/angularfire.js"></script>
 
 <script>
     // Initialize Firebase
@@ -126,7 +126,7 @@
 
 
         // [START recent_posts_query]
-        var ref = firebase.database().ref('quiz').limitToLast(100);
+        var ref = firebase.database().ref('products').limitToLast(100);
         // [END recent_posts_query]
 
         $scope.questions = $firebaseArray(ref);
@@ -135,20 +135,36 @@
         $scope.addQues = function () {
             var userId = firebase.auth().currentUser.uid;
 
+            var sizes = {
+                sizeId: $scope.sizeId,
+                size: $scope.size
+            }
+
             // A product entry.
             var ques = {
                 uid: userId,
-                content: $scope.content,
-                option1: $scope.option1,
-                option2: $scope.option2,
-                option3: $scope.option3,
-                option4: $scope.option4,
-                correct: $scope.correct,
-                money: $scope.money,
-                qid: $scope.qid,
-                a:{
-
+                id: $scope.id,
+                name: $scope.name,
+                image: $scope.image,
+                price: $scope.price,
+                discount: $scope.discount,
+                summary: $scope.summary,
+                sizes:{
+                    sizeId: $scope.sizeId,
+                    size: $scope.size
+                },
+                colors:{
+                    color: $scope.color
+                },
+                stock: $scope.stock,
+                details: $scope.details,
+                description: $scope.description,
+                shipping: $scope.shipping,
+                moreImages:{
+                    caption: $scope.caption,
+                    imge: $scope.imge
                 }
+
             };
 
             // Get a key for a new product.

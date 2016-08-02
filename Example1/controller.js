@@ -21,8 +21,9 @@ function MainController($scope) {
 
 }
 
-function HomeController($scope) {
-    $scope.listproducts = products;
+function HomeController($scope,$firebaseArray) {
+    var ref = firebase.database().ref('products').limitToLast(100);
+    $scope.listproducts = $firebaseArray(ref);
 }
 
 function DetailsController($scope,$stateParams) {
@@ -31,6 +32,7 @@ function DetailsController($scope,$stateParams) {
     products.forEach(function (item) {
         if ($stateParams.id == item.id) {
             $scope.product = item;
+            console.log(item);
             return false;
         }
     });

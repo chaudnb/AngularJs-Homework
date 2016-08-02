@@ -1,5 +1,13 @@
+var fbconfig = {
+    apiKey: "AIzaSyCyD7BY4mljaweM-i5OmNKOg6GTGgcPIHg",
+    authDomain: "mypj2-f944c.firebaseapp.com",
+    databaseURL: "https://mypj2-f944c.firebaseio.com",
+    storageBucket: "mypj2-f944c.appspot.com"
+};
+firebase.initializeApp(fbconfig);
+
 var app = angular.module('myApp', [
-    'ui.router','ngCart','app.directives.product'
+    'ui.router','ngCart','app.directives.product','firebase'
 ]);
 
 function config($stateProvider, $urlRouterProvider) {

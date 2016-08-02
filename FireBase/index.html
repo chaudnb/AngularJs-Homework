@@ -14,56 +14,79 @@
 <div class="container" ng-app="myApp" ng-controller="myController">
     <div>
         <div class="form-group">
-            <label for="name">Name: </label>
-            <input id="name" ng-model="name" class="form-control">
+            <label for="content">Content: </label>
+            <input id="content" ng-model="content" class="form-control">
         </div>
         <div class="form-group">
-            <label for="price">Price: </label>
-            <input id="price" type="number" ng-model="price" class="form-control">
+            <label for="option1">Option 1: </label>
+            <input id="option1" ng-model="option1" class="form-control">
         </div>
         <div class="form-group">
-            <label for="stock">Stock: </label>
-            <input id="stock" type="number" ng-model="stock" class="form-control">
+            <label for="option2">Option 2: </label>
+            <input id="option2" ng-model="option2" class="form-control">
         </div>
         <div class="form-group">
-            <label for="discount">Discount: </label>
-            <input id="discount" type="number" ng-model="discount" class="form-control">
+            <label for="option3">Option 3: </label>
+            <input id="option3" ng-model="option3" class="form-control">
         </div>
         <div class="form-group">
-            <button class="btn btn-block btn-primary" ng-click="addProduct();">Submit</button>
+            <label for="option4">Option 4: </label>
+            <input id="option4" ng-model="option4" class="form-control">
+        </div>
+        <div class="form-group">
+            <label for="correct">Correct: </label>
+            <input id="correct" type="number" ng-model="correct" class="form-control">
+        </div>
+        <div class="form-group">
+            <label for="money">Money: </label>
+            <input id="money" type="number" ng-model="money" class="form-control">
+        </div>
+        <div class="form-group">
+            <button class="btn btn-block btn-primary" ng-click="addQues();">Submit</button>
         </div>
     </div>
     <hr/>
     <div class="table-responsive">
         <table class="table table-bordered table-hover">
             <tr>
-                <th>Name</th>
-                <th>Stock</th>
-                <th>Price</th>
-                <th>Discount</th>
-                <th>Total</th>
-                <th></th>
+                <th>Content</th>
+                <th>Option 1</th>
+                <th>Option 2</th>
+                <th>Option 3</th>
+                <th>Option 4</th>
+                <th>Correct</th>
+                <th>Money</th>
+                <th>Qid</th>
             </tr>
-            <tr ng-repeat="p in products">
+            <tr ng-repeat="q in questions">
                 <td>
-                    <input ng-model="p.name" class="form-control"/>
+                    <input ng-model="q.content" class="form-control"/>
                 </td>
                 <td class="form-inline" style="width: 1%; white-space: nowrap; vertical-align: middle">
-                    <input ng-model="p.stock" style="width: 80px" class="form-control text-right"/>
+                    <input ng-model="q.option1" style="width: 80px" class="form-control text-right"/>
                 </td>
                 <td class="form-inline" style="width: 1%; white-space: nowrap; vertical-align: middle">
-                    <input ng-model="p.price" style="width: 100px" class="form-control text-right"/> $
+                    <input ng-model="q.option2" style="width: 100px" class="form-control text-right"/>
                 </td>
 
                 <td class="form-inline" style="width: 1%; white-space: nowrap; vertical-align: middle">
-                    <input ng-model="p.discount" style="width: 80px" class="form-control text-right"/> %
+                    <input ng-model="q.option3" style="width: 80px" class="form-control text-right"/>
                 </td>
                 <td class="form-inline" style="width: 1%; white-space: nowrap; vertical-align: middle">
-                    <span ng-bind="(p.price * (100 - p.discount) / 100) + '$'"></span>
+                    <input ng-model="q.option4" style="width: 80px" class="form-control text-right"/>
                 </td>
                 <td class="form-inline" style="width: 1%; white-space: nowrap; vertical-align: middle">
-                    <button title="Save" ng-click="updateProduct(p)" class="btn btn-sm btn-primary">Save</button>
-                    <button title="Remove" ng-click="removeProduct(p)" class="btn btn-sm btn-danger">Remove</button>
+                    <input ng-model="q.correct" style="width: 80px" class="form-control text-right"/>
+                </td>
+                <td class="form-inline" style="width: 1%; white-space: nowrap; vertical-align: middle">
+                    <input ng-model="q.money" style="width: 80px" class="form-control text-right"/>
+                </td>
+                <td class="form-inline" style="width: 1%; white-space: nowrap; vertical-align: middle">
+                    <input ng-model="q.id" style="width: 80px" class="form-control text-right"/>
+                </td>
+                <td class="form-inline" style="width: 1%; white-space: nowrap; vertical-align: middle">
+                    <button title="Save" ng-click="updateQues(q)" class="btn btn-sm btn-primary">Save</button>
+                    <button title="Remove" ng-click="removeQues(q)" class="btn btn-sm btn-danger">Remove</button>
                 </td>
             </tr>
         </table>
@@ -103,29 +126,33 @@
 
 
         // [START recent_posts_query]
-        var ref = firebase.database().ref('products').limitToLast(100);
+        var ref = firebase.database().ref('quiz').limitToLast(100);
         // [END recent_posts_query]
 
-        $scope.products = $firebaseArray(ref);
+        $scope.questions = $firebaseArray(ref);
 
         // ADD PRODUCT
-        $scope.addProduct = function () {
+        $scope.addQues = function () {
             var userId = firebase.auth().currentUser.uid;
 
             // A product entry.
-            var product = {
+            var ques = {
                 uid: userId,
-                name: $scope.name,
-                price: $scope.price,
-                stock: $scope.stock,
-                discount: $scope.discount
+                content: $scope.content,
+                option1: $scope.option1,
+                option2: $scope.option2,
+                option3: $scope.option3,
+                option4: $scope.option4,
+                correct: $scope.correct,
+                money: $scope.money,
+                qid: $scope.qid
             };
 
             // Get a key for a new product.
-            var key = firebase.database().ref().child('products').push().key;
+            var key = firebase.database().ref().child('quiz').push().key;
 
             var updates = {};
-            updates['/products/' + key] = product;
+            updates['/quiz/' + key] = ques;
             return firebase.database().ref().update(updates, function (error) {
                 if (error) {
                     console.log('Synchronization failed');
@@ -135,15 +162,15 @@
             });
         };
 
-        $scope.removeProduct = function (product) {
+        $scope.removeQues = function (ques) {
             if (confirm("Are you sure to delete this item?")) {
-                $scope.products.$remove(product);
+                $scope.questions.$remove(ques);
             }
 
         }
 
-        $scope.updateProduct = function (product) {
-            $scope.products.$save(product);
+        $scope.updateQues = function (ques) {
+            $scope.questions.$save(ques);
         }
     });
 </script>

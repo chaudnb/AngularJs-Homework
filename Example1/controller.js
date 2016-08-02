@@ -41,5 +41,11 @@ function DetailsController($scope,$stateParams) {
 }
 
 function CartController($scope) {
-    $scope.selectedItems = [];
+    $scope.cart = [];
+    if(localStorage.getItem("shopping-cart")) {
+        $scope.cart = localStorage.getItem("shopping-cart");
+    } else {
+        $scope.cart = {};
+    }
+
 }

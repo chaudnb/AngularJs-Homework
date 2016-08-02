@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ai là triệu phú</title>
+    <link href="css/bootstrap.css" rel="stylesheet" type="text/css">
+</head>
+<body ng-app="myApp" ng-controller="myController">
+<div class="container">
+    <div class="row" style="margin-top: 20px">
+        <div class="col-sm-9 col-xs-8">
+            <img src="altp.jpg" class="img-responsive text-center">
+            <div ng-repeat="question in questions" ng-show="currentQues.id == question.id">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h4>Câu hỏi {{index + 1}} : {{question.content}}</h4>
+                    </div>
+                    <div class="panel-body">
+                        <div class="col-sm-6">
+                            <button class="btn btn-block btn-primary" style="margin-top:10px" ng-click="check(1)">{{question.option1}}</button>
+                        </div>
+                        <div class="col-sm-6">
+                            <button class="btn btn-block btn-primary" style="margin-top:10px" ng-click="check(2)">{{question.option2}}</button>
+                        </div>
+                        <div class="col-sm-6">
+                            <button class="btn btn-block btn-primary" style="margin-top:10px" ng-click="check(3)">{{question.option3}}</button>
+                        </div>
+                        <div class="col-sm-6">
+                            <button class="btn btn-block btn-primary" style="margin-top:10px" ng-click="check(4)">{{question.option4}}</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-danger" ng-show="end">
+                <div class="panel-heading text-center"><h3>GAME OVER!</h3></div>
+            </div>
+            <div class="panel panel-success" ng-show="finish">
+                <div class="panel-heading text-center"><h3>Chúc mừng bạn đã trả lời đúng tất cả câu hỏi!</h3></div>
+            </div>
+            <h4 class="text-success">Câu hỏi : {{index + 1}} / 10 - Tiền thưởng : {{money}}</h4>
+            <hr>
+            <button class="btn btn-success" ng-click="helpGame()" ng-disabled="pressBtn1">Trợ giúp</button>
+            <button class="btn btn-danger pull-right" ng-click="endGame()"  ng-disabled="pressBtn2">Dừng cuộc chơi</button>
+        </div>
+        <div class="col-sm-3 col-xs-4">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h4>Mức tiền thưởng</h4>
+                </div>
+                <div class="panel-body">
+                    <div ng-repeat="q in questions">
+                        <div ng-if="currentQues.id == q.id" class="btn btn-block btn-danger" style="margin-bottom:5px">{{q.money}}</div>
+                        <div ng-if="currentQues.id != q.id" class="btn btn-block btn-info" style="margin-bottom:5px">{{q.money}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div style="display: none">
+    <audio id="correct-sound" controls>
+        <source src="http://aptech-danang.edu.vn/Content/sounds/correct.mp3" type="audio/mp3">
+    </audio>
+    <audio id="wrong-sound" controls>
+        <source src="http://aptech-danang.edu.vn/Content/sounds/wrong.mp3" type="audio/mp3">
+    </audio>
+    <audio id="intro-sound" controls>
+        <source src="start.mp3" type="audio/mp3">
+    </audio>
+    <audio id="winning-sound" controls>
+        <source src="victory.mp3" type="audio/mp3">
+    </audio>
+</div>
+<script src="js/firebase.js"></script>
+<script src="js/jquery-2.2.3.min.js"></script>
+<script src="js/angular.min.js"></script>
+<script src="js/angularfire.js"></script>
+
+<script>
+    var config = {
+        apiKey: "AIzaSyC7EvijQjvMnfEiswUg6F6f6jq--IvcFyU",
+        authDomain: "myproject-812c9.firebaseapp.com",
+        databaseURL: "https://myproject-812c9.firebaseio.com",
+        storageBucket: "myproject-812c9.appspot.com"
+    };
+    firebase.initializeApp(config);
+
+    // PLAY SOUND
+    function playIntroSound() {
+        var audio = $("#intro-sound")[0];
+        audio.play();
+    };
+    function playWinningSound() {
+        var audio = $("#winning-sound")[0];
+        audio.play();
+    };
+    function playCorrectSound() {
+        var audio = $("#correct-sound")[0];
+        audio.play();
+    };
+
+    function playWrongSound() {
+        var audio = $("#wrong-sound")[0];
+        audio.play();
+    };
+    playIntroSound();
+    var count = 0;
+    var app = angular.module("myApp", ["firebase"]);
+    app.controller("myController", function ($scope, $firebaseArray) {
+        var ref = firebase.database().ref('quiz').limitToLast(100);
+        $scope.ques = $firebaseArray(ref);
+        var newJson = {};
+        newJson = $firebaseArray(ref);
+        var qus = [];
+
+        console.log(newJson);
+        $scope.questions = newJson;
+
+        $scope.index = 0;
+
+
+        $scope.money = 0;
+        $scope.end = false;
+        $scope.finish = false;
+        $scope.pressBtn1 = false;
+        $scope.pressBtn2 = false;
+
+        $scope.currentQues = $scope.questions.$getRecord($scope.index);
+        console.log($scope.currentQues);
+
+        $scope.check = function(x){
+            if(x == $scope.questions[$scope.index].correct){
+                playCorrectSound();
+                $scope.money = $scope.questions[$scope.index].money;
+                $scope.index++;
+                count++;
+                $scope.currentQues = $scope.questions[$scope.index];
+                if($scope.index == 10){
+
+                    $scope.index = 9;
+                    $scope.finish = true;
+                    playWinningSound();
+                    $scope.pressBtn1 = true;
+                    $scope.pressBtn2 = true;
+                }
+            }else{
+                playWrongSound();
+                if($scope.index <5){
+                    $scope.money = 0;
+                }else if($scope.index >= 5){
+                    $scope.money = 2000000;
+                }else if($scope.index == 10){
+                    $scope.money = 10000000;
+                }
+                $scope.currentQues = [];
+                $scope.end = true;
+                $scope.pressBtn1 = true;
+                $scope.pressBtn2 = true;
+            }
+        }
+        $scope.endGame = function(){
+            $scope.money = $scope.questions[$scope.index - 1].money;
+            $scope.currentQues = [];
+            $scope.end = true;
+            $scope.pressBtn2 = true;
+        }
+        $scope.helpGame = function(){
+            var y = $scope.currentQues.correct;
+            switch (y){
+                case 1 :
+                    $scope.currentQues.option2 = 'X';
+                    $scope.currentQues.option3 = 'X';
+                    break;
+                case 2 :
+                    $scope.currentQues.option1 = 'X';
+                    $scope.currentQues.option4 = 'X';
+                    break;
+                case 3 :
+                    $scope.currentQues.option2 = 'X';
+                    $scope.currentQues.option4 = 'X';
+                    break;
+                case 4 :
+                    $scope.currentQues.option1 = 'X';
+                    $scope.currentQues.option3 = 'X';
+                    break;
+                default:
+                    break;
+            }
+            $scope.pressBtn1 = true;
+        }
+    })
+</script>
+</body>
+</html>
